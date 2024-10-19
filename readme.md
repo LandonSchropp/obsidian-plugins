@@ -23,6 +23,6 @@ This repo contains a few useful `pnpm` commands to assist with development.
   content is changed. It also automatically generates the plugin directories in the development
   vault and symlinks the build files so the plugin can be iterated on. This command requires the
   `$OBSIDIAN_DEVELOPMENT_VAULT` environment variable to be defined.
-- `pnpm deploy`: This builds and "deploys" the plugins to the Obsidian vault. Unlike the `dev`
+- `pnpm prod`: This builds and "deploys" the plugins to the Obsidian vault. Unlike the `dev`
   command, this copies the generated build files, which allows them to be synced to other files.
   This command requires the `$OBSIDIAN_VAULT` environment variable to be defined.

@@ -6,22 +6,21 @@ if [ -z "$OBSIDIAN_DEVELOPMENT_VAULT" ]; then
   exit 1
 fi
 
+# Generate the paths
 OBSIDIAN_DEVELOPMENT_VAULT=$(realpath "$OBSIDIAN_DEVELOPMENT_VAULT")
 ROOT_DIRECTORY=$(dirname "$(dirname "$(realpath "$0")")")
 SOURCE_DIRECTORY="$ROOT_DIRECTORY/plugins"
 DIST_DIRECTORY="$ROOT_DIRECTORY/dist"
 DEVELOPMENT_PLUGINS_DIRECTORY="$OBSIDIAN_DEVELOPMENT_VAULT/.obsidian/plugins"
 
-# Generate the folders for the development plugin in development vault.
 for PLUGIN_SOURCE_DIRECTORY in "$SOURCE_DIRECTORY"/*; do
+  # Generate the plugin paths
   BASENAME=$(basename "$PLUGIN_SOURCE_DIRECTORY")
   PLUGIN_DIST_DIRECTORY="$DIST_DIRECTORY/$BASENAME"
   PLUGIN_DEVELOPMENT_DIRECTORY="$DEVELOPMENT_PLUGINS_DIRECTORY/$BASENAME"
 
-  # Ensure the folder exists in the development vault.
-  mkdir -p "$PLUGIN_DEVELOPMENT_DIRECTORY"
-
   # Create the symlinks
+  mkdir -p "$PLUGIN_DEVELOPMENT_DIRECTORY"
   ln -fs "$PLUGIN_DIST_DIRECTORY"/main.js "$PLUGIN_DEVELOPMENT_DIRECTORY"/main.js
   ln -fs "$PLUGIN_SOURCE_DIRECTORY"/manifest.json "$PLUGIN_DEVELOPMENT_DIRECTORY"/manifest.json
 done

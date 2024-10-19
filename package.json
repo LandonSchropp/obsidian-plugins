@@ -3,6 +3,7 @@
   "description": "My personal Obsidian plugins",
   "scripts": {
     "dev": "bin/dev",
+    "prod": "bin/prod",
     "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky",

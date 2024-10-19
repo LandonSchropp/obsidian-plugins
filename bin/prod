@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# Ensure the vault variable is defined.
+if [ -z "$OBSIDIAN_VAULT" ]; then
+  echo "The OBSIDIAN_VAULT variable must be defined."
+  exit 1
+fi
+
+# Build all of the plugins.
+yarn build
+
+# Generate the paths
+OBSIDIAN_VAULT=$(realpath "$OBSIDIAN_VAULT")
+ROOT_DIRECTORY=$(dirname "$(dirname "$(realpath "$0")")")
+SOURCE_DIRECTORY="$ROOT_DIRECTORY/plugins"
+DIST_DIRECTORY="$ROOT_DIRECTORY/dist"
+PLUGINS_DIRECTORY="$OBSIDIAN_VAULT/.obsidian/plugins"
+
+for PLUGIN_SOURCE_DIRECTORY in "$SOURCE_DIRECTORY"/*; do
+  # Generate the plugin paths
+  BASENAME=$(basename "$PLUGIN_SOURCE_DIRECTORY")
+  PLUGIN_DIST_DIRECTORY="$DIST_DIRECTORY/$BASENAME"
+  VAULT_PLUGINS_DIRECTORY="$PLUGINS_DIRECTORY/$BASENAME"
+
+  # Copy the build files
+  mkdir -p "$VAULT_PLUGINS_DIRECTORY"
+  cp "$PLUGIN_DIST_DIRECTORY"/main.js "$VAULT_PLUGINS_DIRECTORY"/main.js
+  cp "$PLUGIN_SOURCE_DIRECTORY"/manifest.json "$VAULT_PLUGINS_DIRECTORY"/manifest.json
+done

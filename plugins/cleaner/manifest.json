@@ -1,0 +1,10 @@
+{
+  "id": "cleaner",
+  "name": "Cleaner",
+  "version": "1.0.0",
+  "minAppVersion": "1.6.7",
+  "description": "A plugin for removing empty sections of markdown files",
+  "author": "Landon Schropp",
+  "authorUrl": "https://www.landonschropp.com",
+  "isDesktopOnly": false
+}

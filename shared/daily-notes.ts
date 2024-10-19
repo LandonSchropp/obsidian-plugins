@@ -1,14 +1,16 @@
-import { TFile, App } from "obsidian";
 import { Temporal } from "@js-temporal/polyfill";
+import { TFile, App } from "obsidian";
+
+// TODO: All of these functions are specific to _my_ daily notes setup. At some
 
 const DAILY_NOTES_FOLDER = "Daily Notes";
 
 /**
- * @param file The file to check.
- * @returns True if the file is a TFile, false otherwise.
+ * @param app The Obsidian app instance.
+ * @returns The daily notes in the app's vault.
  */
-export function isFile(file: unknown): file is TFile {
-  return file instanceof TFile;
+export function fetchAllDailyNotes(app: App): TFile[] {
+  return app.vault.getFiles().filter((file) => isDailyNote(file));
 }
 
 /**
@@ -21,16 +23,28 @@ export function isDailyNote(file: TFile): boolean {
 }
 
 /**
+ * Fetches previous daily note.
+ * @param app The Obsidian app instance.
+ * @returns The file representing the previous daily note (likely yesterday), or undefined if it
+ * doesn't exist.
+ */
+export function findPreviousDailyNote(app: App, file: TFile): TFile | undefined {
+  const yesterday = parseDateFromDailyNoteFileName(file).subtract({ days: 1 }).toString();
+
+  return fetchAllDailyNotes(app).find((note) => note.name.startsWith(yesterday));
+}
+
+/**
  * Parses the date from the daily note name.
  * @param file The file to parse the date from.
  * @returns The date parsed from the daily note name.
  */
-export function parseDateFromDailyNoteName(file: TFile): Temporal.PlainDate {
+export function parseDateFromDailyNoteFileName(file: TFile): Temporal.PlainDate {
   return Temporal.PlainDate.from(file.name.slice(0, 10));
 }
 
 /**
- * Fetches the daily notes for the provide day and the day before it.
+ * Fetches the daily notes for the provided day and the day before it.
  * @param app The Obsidian app instance.
  * @param date The date to fetch the daily notes for.
  * @returns A tuple containing the daily notes for the day and the day before it, or undefined if
@@ -40,7 +54,7 @@ export function fetchDailyNotes(
   app: App,
   date: Temporal.PlainDate,
 ): [TFile | undefined, TFile | undefined] {
-  const dailyNotes = app.vault.getFiles().filter(isDailyNote);
+  const dailyNotes = fetchAllDailyNotes(app);
   const previousDate = date.subtract({ days: 1 });
 
   return [

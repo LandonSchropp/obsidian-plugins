@@ -1,7 +1,8 @@
 import { Plugin } from "obsidian";
 import { forwardTasks } from "./forward-tasks";
-import { isDailyNote, isFile, parseDateFromDailyNoteName } from "./files";
 import { Temporal } from "@js-temporal/polyfill";
+import { isDailyNote, parseDateFromDailyNoteFileName } from "../../shared/daily-notes";
+import { isFile } from "../../shared/files";
 
 export default class TaskForwarderPlugin extends Plugin {
   async onload() {
@@ -18,11 +19,11 @@ export default class TaskForwarderPlugin extends Plugin {
       name: "Forward Tasks",
       icon: "forward",
       editorCallback: (_editor, { file }) => {
-        if (!isFile(file) || !isDailyNote(file)) {
+        if (!file || !isFile(file) || !isDailyNote(file)) {
           return;
         }
 
-        return forwardTasks(this.app, parseDateFromDailyNoteName(file));
+        return forwardTasks(this.app, parseDateFromDailyNoteFileName(file));
       },
     });
 
@@ -31,7 +32,7 @@ export default class TaskForwarderPlugin extends Plugin {
       this.registerEvent(
         this.app.vault.on("create", (file) => {
           if (isFile(file)) {
-            forwardTasks(this.app, parseDateFromDailyNoteName(file));
+            forwardTasks(this.app, parseDateFromDailyNoteFileName(file));
           }
         }),
       );

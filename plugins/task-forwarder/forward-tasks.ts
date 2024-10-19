@@ -1,10 +1,10 @@
 import { App } from "obsidian";
 import { applyTasks } from "./apply-tasks";
 import { TO_DO_TYPE, ACTIONABLE_TASK_TYPES } from "./constants";
-import { fetchDailyNotes } from "./files";
 import { importTasks } from "./import-tasks";
 import { displayWarning } from "./notifications";
 import { Temporal } from "@js-temporal/polyfill";
+import { fetchDailyNotes } from "../../shared/daily-notes";
 
 /**
  * Forward tasks from the previous daily notes to the current daily note.

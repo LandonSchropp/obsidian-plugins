@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# Ensure the development vault variable is defined.
+if [ -z "$OBSIDIAN_DEVELOPMENT_VAULT" ]; then
+  echo "The OBSIDIAN_DEVELOPMENT_VAULT variable must be defined."
+  exit 1
+fi
+
+OBSIDIAN_DEVELOPMENT_VAULT=$(realpath "$OBSIDIAN_DEVELOPMENT_VAULT")
+ROOT_DIRECTORY=$(dirname "$(dirname "$(realpath "$0")")")
+SOURCE_DIRECTORY="$ROOT_DIRECTORY/plugins"
+DIST_DIRECTORY="$ROOT_DIRECTORY/dist"
+DEVELOPMENT_PLUGINS_DIRECTORY="$OBSIDIAN_DEVELOPMENT_VAULT/.obsidian/plugins"
+
+# Generate the folders for the development plugin in development vault.
+for PLUGIN_SOURCE_DIRECTORY in "$SOURCE_DIRECTORY"/*; do
+  BASENAME=$(basename "$PLUGIN_SOURCE_DIRECTORY")
+  PLUGIN_DIST_DIRECTORY="$DIST_DIRECTORY/$BASENAME"
+  PLUGIN_DEVELOPMENT_DIRECTORY="$DEVELOPMENT_PLUGINS_DIRECTORY/$BASENAME"
+
+  # Ensure the folder exists in the development vault.
+  mkdir -p "$PLUGIN_DEVELOPMENT_DIRECTORY"
+
+  # Create the symlinks
+  ln -fs "$PLUGIN_DIST_DIRECTORY"/main.js "$PLUGIN_DEVELOPMENT_DIRECTORY"/main.js
+  ln -fs "$PLUGIN_SOURCE_DIRECTORY"/manifest.json "$PLUGIN_DEVELOPMENT_DIRECTORY"/manifest.json
+done
+
+# Start the development server.
+node esbuild.config.mjs

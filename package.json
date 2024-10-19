@@ -2,7 +2,7 @@
   "name": "@landonschropp/obsidian-plugins",
   "description": "My personal Obsidian plugins",
   "scripts": {
-    "dev": "node esbuild.config.mjs",
+    "dev": "bin/dev",
     "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky",

@@ -1,6 +1,6 @@
 import { Plugin } from "obsidian";
 import { findPreviousDailyNote, isDailyNote } from "./files";
-import { cleanNote } from "clean-note";
+import { cleanNote } from "./clean-note";
 
 export default class TaskForwarderPlugin extends Plugin {
   async onload() {

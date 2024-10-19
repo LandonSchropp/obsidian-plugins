@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@codemirror/view':
+        specifier: ^6.34.1
+        version: 6.34.1
       '@js-temporal/polyfill':
         specifier: ^0.4.4
         version: 0.4.4

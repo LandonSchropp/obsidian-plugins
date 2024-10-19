@@ -31,6 +31,7 @@
     "typescript-eslint": "^8.9.0"
   },
   "dependencies": {
+    "@codemirror/view": "^6.34.1",
     "@js-temporal/polyfill": "^0.4.4"
   }
 }

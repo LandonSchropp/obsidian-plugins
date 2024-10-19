@@ -1,0 +1,35 @@
+{
+  "name": "@landonschropp/obsidian-plugins",
+  "description": "My personal Obsidian plugins",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "preinstall": "npx only-allow pnpm",
+    "prepare": "husky",
+    "lint": "eslint ."
+  },
+  "keywords": [
+    "obsidian"
+  ],
+  "author": "Landon Schropp <schroppl@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^9.12.0",
+    "@types/node": "^22.7.5",
+    "esbuild": "0.24.0",
+    "eslint": "^9.12.0",
+    "eslint-config-prettier": "^9.1.0",
+    "globals": "^15.11.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "obsidian": "latest",
+    "prettier": "^3.3.3",
+    "tsc-files": "^1.1.4",
+    "tslib": "2.7.0",
+    "typescript": "5.6.3",
+    "typescript-eslint": "^8.9.0"
+  },
+  "dependencies": {
+    "@js-temporal/polyfill": "^0.4.4"
+  }
+}

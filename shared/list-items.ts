@@ -1,15 +1,16 @@
+import { extractLeadingWhitespace } from "./whitespace";
+
 /**
- * Matches a bullet, number or task list item. The first capture group is the leading whitespace,
- * the second is the list item marker, and the last is the remainder of the content on the line.
+ * Matches a bullet, number or task list item, excluding any leading whitespace.
  */
-const LIST_ITEM_REGEX = /^(\s*)((?:[-+*]|\d+\.) (?:\[.\] )?)/;
+const LIST_ITEM_REGEX = /^(?:[-+*]|\d+\.) (?:\[.\] )?/;
 
 /**
  * @param line The line to check.
  * @returns True if the provided line is a list item, false otherwise.
  */
 export function isListItem(line: string): boolean {
-  return LIST_ITEM_REGEX.test(line);
+  return extractListItemMarker(line) !== "";
 }
 
 /**
@@ -18,5 +19,6 @@ export function isListItem(line: string): boolean {
  * string.
  */
 export function extractListItemMarker(line: string): string {
-  return line.match(LIST_ITEM_REGEX)?.[2] ?? "";
+  const whitespace = extractLeadingWhitespace(line);
+  return line.slice(whitespace.length).match(LIST_ITEM_REGEX)?.[0] ?? "";
 }

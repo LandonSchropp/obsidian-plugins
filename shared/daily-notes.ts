@@ -24,6 +24,14 @@ export function isDailyNote(file: TFile): boolean {
 }
 
 /**
+ * @param file The file to check.
+ * @returns True if the provided file is a daily note for today, false otherwise.
+ */
+export function isTodaysDailyNote(file: TFile): boolean {
+  return isDailyNote(file) && parseDateFromDailyNoteFileName(file) === Temporal.Now.plainDateISO();
+}
+
+/**
  * Fetches previous daily note.
  * @param app The Obsidian app instance.
  * @returns The file representing the previous daily note (likely yesterday), or undefined if it

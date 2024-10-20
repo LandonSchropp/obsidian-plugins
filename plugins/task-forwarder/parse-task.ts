@@ -1,3 +1,5 @@
+import { extractListItemText } from "../../shared/list-items";
+import { extractTaskMarkerType, isTaskListItem } from "../../shared/task-list-items";
 import { Task } from "./types";
 
 /**
@@ -7,15 +9,16 @@ import { Task } from "./types";
  * parsed.
  */
 export function parseTask(line: string, lineNumber: number): Task | undefined {
-  const match = line.match(/^\s*[-*] \[(.)\] (.*)$/);
-
-  if (match === null) {
+  if (!isTaskListItem(line)) {
     return;
   }
 
+  const text = extractListItemText(line);
+  const type = extractTaskMarkerType(line);
+
   return {
-    type: match[1],
-    text: match[2],
+    type,
+    text,
     lineNumber,
   };
 }

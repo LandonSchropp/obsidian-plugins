@@ -1,10 +1,7 @@
 import { App, TFile } from "obsidian";
 import { Task } from "./types";
 import { parseTasks } from "./parse-tasks";
-import { SCHEDULED_TYPE } from "./constants";
-
-/** A regular expression for an individual task. */
-export const TASK_REGEX = /^\s*[-*] \[(.)\] (.*)$/;
+import { SCHEDULED_TYPE } from "../../shared/task-list-items";
 
 /**
  * This method _destructively_ imports the task from the provided note. Currently, the only tasks

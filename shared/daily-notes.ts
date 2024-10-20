@@ -1,7 +1,8 @@
 import { Temporal } from "@js-temporal/polyfill";
 import { TFile, App } from "obsidian";
 
-// TODO: All of these functions are specific to _my_ daily notes setup. At some
+// TODO: All of these functions are specific to _my_ daily notes setup. At some point, these could
+// instead be pulled from the daily note and periodic note settings.
 
 const DAILY_NOTES_FOLDER = "Daily Notes";
 

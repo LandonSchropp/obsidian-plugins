@@ -22,3 +22,13 @@ export function extractListItemMarker(line: string): string {
   const whitespace = extractLeadingWhitespace(line);
   return line.slice(whitespace.length).match(LIST_ITEM_REGEX)?.[0] ?? "";
 }
+
+/**
+ * @param line The line to extract the text from.
+ * @returns The text of the list item, excluding the list item marker and leading whitespace.
+ */
+export function extractListItemText(line: string): string {
+  const whitespace = extractLeadingWhitespace(line);
+  const listItemMarker = extractListItemMarker(line);
+  return line.slice(whitespace.length + listItemMarker.length);
+}

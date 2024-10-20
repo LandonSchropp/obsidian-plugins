@@ -1,10 +1,17 @@
 import { App } from "obsidian";
 import { applyTasks } from "./apply-tasks";
-import { TO_DO_TYPE, ACTIONABLE_TASK_TYPES } from "./constants";
 import { importTasks } from "./import-tasks";
 import { displayWarning } from "./notifications";
 import { Temporal } from "@js-temporal/polyfill";
 import { fetchDailyNotes } from "../../shared/daily-notes";
+import {
+  FORWARDED_TYPE,
+  SCHEDULED_TYPE,
+  INCOMPLETE_TYPE,
+  TO_DO_TYPE,
+} from "../../shared/task-list-items";
+
+export const ACTIONABLE_TASK_TYPES = [FORWARDED_TYPE, SCHEDULED_TYPE, INCOMPLETE_TYPE];
 
 /**
  * Forward tasks from the previous daily notes to the current daily note.

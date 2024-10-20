@@ -1,9 +1,9 @@
 import { App, TFile } from "obsidian";
 import { Task } from "./types";
-import { SCHEDULED_TYPE } from "./constants";
 import { displayNeutral, displaySuccess } from "./notifications";
 import { parseTasks } from "./parse-tasks";
 import { pluralize } from "./utilities";
+import { SCHEDULED_TYPE } from "../../shared/task-list-items";
 
 /** The regular expression used to determine the tasks section. */
 export const TASKS_HEADING_REGEX = /tasks/i;

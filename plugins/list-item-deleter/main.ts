@@ -1,7 +1,7 @@
 import { Plugin } from "obsidian";
 import { EditorView, keymap } from "@codemirror/view";
-
-export const LIST_ITEM_REGEX = /^(\s*)((?:[-+*]|\d+\.) (?:\[.\] )?)/;
+import { isListItem, extractListItemMarker } from "../../shared/list-items";
+import { extractLeadingWhitespace } from "../../shared/whitespace";
 
 export default class ListDeleterPlugin extends Plugin {
   async onload() {
@@ -26,22 +26,25 @@ export default class ListDeleterPlugin extends Plugin {
 
     // If the current line is not a list item, don't handle the keypress
     const line = doc.lineAt(selection.main.head);
-    const match = line.text.match(LIST_ITEM_REGEX);
 
-    if (!match) {
+    if (!isListItem(line.text)) {
       return false;
     }
 
+    // Extract the text from the line.
+    const whitespace = extractLeadingWhitespace(line.text);
+    const listItemMarker = extractListItemMarker(line.text);
+
     // Ignore the keypress if the cursor is not right after the list item
-    if (selection.main.head !== line.from + match[0].length) {
+    if (selection.main.head !== line.from + whitespace.length + listItemMarker.length) {
       return false;
     }
 
     // Delete the list item marker (but not the whitespace)
     view.dispatch({
       changes: {
-        from: line.from + match[1].length,
-        to: line.from + match[0].length,
+        from: line.from + whitespace.length,
+        to: line.from + whitespace.length + listItemMarker.length,
         insert: "",
       },
     });

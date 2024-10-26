@@ -23,7 +23,13 @@ export default class TaskForwarderPlugin extends Plugin {
           return;
         }
 
-        return forwardTasks(this.app, parseDateFromDailyNoteFileName(context.file));
+        const date = parseDateFromDailyNoteFileName(context.file);
+
+        if (!date) {
+          return;
+        }
+
+        return forwardTasks(this.app, date);
       },
     });
 
@@ -31,9 +37,17 @@ export default class TaskForwarderPlugin extends Plugin {
     this.app.workspace.onLayoutReady(() => {
       this.registerEvent(
         this.app.vault.on("create", (file) => {
-          if (isFile(file)) {
-            forwardTasks(this.app, parseDateFromDailyNoteFileName(file));
+          if (!isFile(file)) {
+            return;
           }
+
+          const date = parseDateFromDailyNoteFileName(file);
+
+          if (!date) {
+            return;
+          }
+
+          return forwardTasks(this.app, date);
         }),
       );
     });

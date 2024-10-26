@@ -4,6 +4,8 @@ import { TFile, App } from "obsidian";
 // TODO: All of these functions are specific to _my_ daily notes setup. At some point, these could
 // instead be pulled from the daily note and periodic note settings.
 
+const DAILY_NOTE_REGEX = /^(\d{4}-\d{2}-\d{2}) - Daily Note$/;
+
 const DAILY_NOTES_FOLDER = "Daily Notes";
 
 /**
@@ -38,8 +40,13 @@ export function isTodaysDailyNote(file: TFile): boolean {
  * doesn't exist.
  */
 export function findPreviousDailyNote(app: App, file: TFile): TFile | undefined {
-  const yesterday = parseDateFromDailyNoteFileName(file).subtract({ days: 1 }).toString();
+  const date = parseDateFromDailyNoteFileName(file);
 
+  if (!date) {
+    return undefined;
+  }
+
+  const yesterday = date.subtract({ days: 1 }).toString();
   return fetchAllDailyNotes(app).find((note) => note.name.startsWith(yesterday));
 }
 
@@ -48,8 +55,14 @@ export function findPreviousDailyNote(app: App, file: TFile): TFile | undefined 
  * @param file The file to parse the date from.
  * @returns The date parsed from the daily note name.
  */
-export function parseDateFromDailyNoteFileName(file: TFile): Temporal.PlainDate {
-  return Temporal.PlainDate.from(file.name.slice(0, 10));
+export function parseDateFromDailyNoteFileName(file: TFile): Temporal.PlainDate | undefined {
+  const match = file.name.match(DAILY_NOTE_REGEX);
+
+  if (!match) {
+    return undefined;
+  }
+
+  return Temporal.PlainDate.from(match[1]);
 }
 
 /**

@@ -1,20 +1,15 @@
 import { Temporal } from "@js-temporal/polyfill";
 import { TFile, App } from "obsidian";
+import { formatWeek, parsePlainDate, parseWeekPlainDate } from "./date";
 
-// TODO: All of these functions are specific to _my_ daily notes setup. At some point, these could
-// instead be pulled from the daily note and periodic note settings.
+// TODO: All of these functions are specific to _my_ periodic notes setup. At some point, these
+// could instead be pulled from the daily note and periodic note settings.
 
-const DAILY_NOTE_REGEX = /^(\d{4}-\d{2}-\d{2}) - Daily Note$/;
+const DAILY_NOTE_REGEX = /^\d{4}-\d{2}-\d{2} - Daily Note$/;
+const WEEKLY_NOTE_REGEX = /^\d{4}-W\d{2} - Weekly Note$/;
 
 const DAILY_NOTES_FOLDER = "Daily Notes";
-
-/**
- * @param app The Obsidian app instance.
- * @returns The daily notes in the app's vault.
- */
-export function fetchAllDailyNotes(app: App): TFile[] {
-  return app.vault.getFiles().filter((file) => isDailyNote(file));
-}
+const WEEKLY_NOTES_FOLDER = "Weekly Notes";
 
 /**
  * Determines if the provided file is a daily note.
@@ -22,32 +17,81 @@ export function fetchAllDailyNotes(app: App): TFile[] {
  * @returns True if the file is a daily note, false otherwise.
  */
 export function isDailyNote(file: TFile): boolean {
-  return file.path.startsWith(DAILY_NOTES_FOLDER) && file.extension === "md";
+  return (
+    file.path.startsWith(DAILY_NOTES_FOLDER) &&
+    !!file.name.match(DAILY_NOTE_REGEX) &&
+    file.extension === "md"
+  );
+}
+
+/**
+ * Determines if the provided file is a weekly note.
+ * @param file The file to check.
+ * @returns True if the file is a weekly note, false otherwise.
+ */
+export function isWeeklyNote(file: TFile): boolean {
+  return (
+    file.path.startsWith(WEEKLY_NOTES_FOLDER) &&
+    !!file.name.match(WEEKLY_NOTE_REGEX) &&
+    file.extension === "md"
+  );
+}
+
+/**
+ * Determines if the provided file is a periodic note (daily or weekly).
+ * @param file The file to check.
+ * @returns True if the file is a periodic note, false otherwise.
+ */
+export function isPeriodicNote(file: TFile): boolean {
+  return isDailyNote(file) || isWeeklyNote(file);
+}
+
+/**
+ * @param app The Obsidian app instance.
+ * @returns The daily notes in the app's vault.
+ */
+function fetchDailyNotes(app: App): TFile[] {
+  return app.vault.getFiles().filter((file) => isDailyNote(file));
+}
+
+/**
+ * @param app The Obsidian app instance.
+ * @returns The weekly notes in the app's vault.
+ */
+function fetchWeeklyNotes(app: App): TFile[] {
+  return app.vault.getFiles().filter((file) => isWeeklyNote(file));
 }
 
 /**
  * @param file The file to check.
- * @returns True if the provided file is a daily note for today, false otherwise.
+ * @returns True if the provided file is the daily note for today, false otherwise.
  */
-export function isTodaysDailyNote(file: TFile): boolean {
-  return isDailyNote(file) && parseDateFromDailyNoteFileName(file) === Temporal.Now.plainDateISO();
+export function isCurrentDailyNote(file: TFile): boolean {
+  return isDailyNote(file) && parseDateFromDailyNote(file) === Temporal.Now.plainDateISO();
 }
 
 /**
- * Fetches previous daily note.
- * @param app The Obsidian app instance.
- * @returns The file representing the previous daily note (likely yesterday), or undefined if it
- * doesn't exist.
+ * @param file The file to check.
+ * @returns True if the provided file is the weekly note for this week, false otherwise.
  */
-export function findPreviousDailyNote(app: App, file: TFile): TFile | undefined {
-  const date = parseDateFromDailyNoteFileName(file);
+export function isCurrentWeeklyNote(file: TFile): boolean {
+  return isWeeklyNote(file) && file.name.slice(0, 8) === formatWeek(Temporal.Now.plainDateISO());
+}
 
-  if (!date) {
-    return undefined;
-  }
+/**
+ * @param file The file to check.
+ * @returns True if the provided file is the current periodic note, false otherwise.
+ */
+export function isCurrentPeriodicNote(file: TFile): boolean {
+  return isCurrentDailyNote(file) || isCurrentWeeklyNote(file);
+}
 
-  const yesterday = date.subtract({ days: 1 }).toString();
-  return fetchAllDailyNotes(app).find((note) => note.name.startsWith(yesterday));
+/**
+ * @param app The Obsidian app instance.
+ * @returns The current daily note file, or undefined if it doesn't exist.
+ */
+export function fetchCurrentDailyNote(app: App): TFile | undefined {
+  return fetchDailyNotes(app).find(isCurrentDailyNote);
 }
 
 /**
@@ -55,32 +99,73 @@ export function findPreviousDailyNote(app: App, file: TFile): TFile | undefined 
  * @param file The file to parse the date from.
  * @returns The date parsed from the daily note name.
  */
-export function parseDateFromDailyNoteFileName(file: TFile): Temporal.PlainDate | undefined {
-  const match = file.name.match(DAILY_NOTE_REGEX);
-
-  if (!match) {
-    return undefined;
-  }
-
-  return Temporal.PlainDate.from(match[1]);
+export function parseDateFromDailyNote(file: TFile): Temporal.PlainDate | undefined {
+  return isDailyNote(file) ? parsePlainDate(file.name) : undefined;
 }
 
 /**
- * Fetches the daily notes for the provided day and the day before it.
- * @param app The Obsidian app instance.
- * @param date The date to fetch the daily notes for.
- * @returns A tuple containing the daily notes for the day and the day before it, or undefined if
- * they don't exist.
+ * Parses the date from the weekly note name.
+ * @param file The file to parse the date from.
+ * @returns The date parsed from the weekly note name.
  */
-export function fetchDailyNotes(
-  app: App,
-  date: Temporal.PlainDate,
-): [TFile | undefined, TFile | undefined] {
-  const dailyNotes = fetchAllDailyNotes(app);
-  const previousDate = date.subtract({ days: 1 });
+export function parseDateFromWeeklyNote(file: TFile): Temporal.PlainDate | undefined {
+  return isWeeklyNote(file) ? parseWeekPlainDate(file.name) : undefined;
+}
 
-  return [
-    dailyNotes.find((note) => note.name.startsWith(date.toString())),
-    dailyNotes.find((note) => note.name.startsWith(previousDate.toString())),
-  ];
+/**
+ * @param app The Obsidian app instance.
+ * @param date The date to find the daily note for.
+ * @returns The daily note for the provided date, or undefined if it doesn't exist.
+ */
+export function findDailyNote(app: App, date: Temporal.PlainDate): TFile | undefined {
+  return fetchDailyNotes(app).find(
+    (note) => isDailyNote(note) && note.name.startsWith(date.toString()),
+  );
+}
+
+/**
+ * Fetches previous periodic note.
+ * @param app The Obsidian app instance.
+ * @returns The file representing the previous daily note (likely yesterday), or undefined if it
+ * doesn't exist.
+ */
+export function findPreviousDailyNote(app: App, file: TFile): TFile | undefined {
+  const date = parseDateFromDailyNote(file);
+
+  if (!date) {
+    return undefined;
+  }
+
+  const yesterday = date.subtract({ days: 1 }).toString();
+  return fetchDailyNotes(app).find((note) => note.name.startsWith(yesterday));
+}
+
+/**
+ * Fetches previous weekly note.
+ * @param app The Obsidian app instance.
+ * @param file The file to check.
+ * @returns The file representing the previous weekly note, or undefined if it doesn't exist.
+ */
+function findPreviousWeeklyNote(app: App, file: TFile): TFile | undefined {
+  const date = parseDateFromWeeklyNote(file);
+
+  if (!date) {
+    return undefined;
+  }
+
+  const previousWeek = formatWeek(date.subtract({ weeks: 1 }));
+  const previousWeekName = previousWeek;
+
+  return fetchWeeklyNotes(app).find((note) => note.name.startsWith(previousWeekName));
+}
+
+/**
+ * Finds the previous periodic note for the provided file.
+ * @param app The Obsidian app instance.
+ * @param file The file to find the previous note for.
+ * @returns The previous note file or undefined if it doesn't exist or the file is not a periodic
+ * note.
+ */
+export function findPreviousPeriodicNote(app: App, file: TFile): TFile | undefined {
+  return findPreviousDailyNote(app, file) ?? findPreviousWeeklyNote(app, file);
 }

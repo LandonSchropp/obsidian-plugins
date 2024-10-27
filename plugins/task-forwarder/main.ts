@@ -1,7 +1,6 @@
 import { Plugin } from "obsidian";
 import { forwardTasks } from "./forward-tasks";
-import { Temporal } from "@js-temporal/polyfill";
-import { isTodaysDailyNote, parseDateFromDailyNoteFileName } from "../../shared/daily-notes";
+import { fetchCurrentDailyNote } from "../../shared/daily-notes";
 import { isFile } from "../../shared/files";
 
 export default class TaskForwarderPlugin extends Plugin {
@@ -10,7 +9,13 @@ export default class TaskForwarderPlugin extends Plugin {
       id: "forward-tasks-to-today",
       name: "Forward Tasks to Today's Daily Note",
       icon: "forward",
-      callback: () => forwardTasks(this.app, Temporal.Now.plainDateISO()),
+      callback: () => {
+        const currentDailyNote = fetchCurrentDailyNote(this.app);
+
+        if (currentDailyNote) {
+          forwardTasks(this.app, currentDailyNote);
+        }
+      },
     });
 
     // TODO: Figure out how to disable this command when the current file is not a daily note.
@@ -19,17 +24,11 @@ export default class TaskForwarderPlugin extends Plugin {
       name: "Forward Tasks",
       icon: "forward",
       editorCallback: (_editor, context) => {
-        if (!isFile(context.file) || !isTodaysDailyNote(context.file)) {
+        if (!isFile(context.file)) {
           return;
         }
 
-        const date = parseDateFromDailyNoteFileName(context.file);
-
-        if (!date) {
-          return;
-        }
-
-        return forwardTasks(this.app, date);
+        return forwardTasks(this.app, context.file);
       },
     });
 
@@ -41,13 +40,7 @@ export default class TaskForwarderPlugin extends Plugin {
             return;
           }
 
-          const date = parseDateFromDailyNoteFileName(file);
-
-          if (!date) {
-            return;
-          }
-
-          return forwardTasks(this.app, date);
+          return forwardTasks(this.app, file);
         }),
       );
     });

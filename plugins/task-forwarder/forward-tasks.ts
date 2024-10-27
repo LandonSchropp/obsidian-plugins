@@ -1,9 +1,8 @@
-import { App } from "obsidian";
+import { App, TFile } from "obsidian";
 import { applyTasks } from "./apply-tasks";
 import { importTasks } from "./import-tasks";
 import { displayWarning } from "./notifications";
-import { Temporal } from "@js-temporal/polyfill";
-import { fetchDailyNotes } from "../../shared/daily-notes";
+import { findPreviousDailyNote } from "../../shared/daily-notes";
 import {
   FORWARDED_TYPE,
   SCHEDULED_TYPE,
@@ -14,16 +13,16 @@ import {
 export const ACTIONABLE_TASK_TYPES = [FORWARDED_TYPE, SCHEDULED_TYPE, INCOMPLETE_TYPE];
 
 /**
- * Forward tasks from the previous daily notes to the current daily note.
+ * Forward tasks from the previous daily note to the provided file.
  * @param app The Obsidian app instance.
- * @param date The date to forward the tasks for.
+ * @param file The daily note to forward tasks to.
  */
-export async function forwardTasks(app: App, date: Temporal.PlainDate): Promise<void> {
+export async function forwardTasks(app: App, file: TFile): Promise<void> {
   // Fetch the daily notes
-  const [today, yesterday] = fetchDailyNotes(app, date);
+  const yesterday = findPreviousDailyNote(app, file);
 
-  // Ensure the notes are present
-  if (today === undefined || yesterday === undefined) {
+  // Ensure the file is a daily note and the previous daily note exists.
+  if (yesterday === undefined) {
     displayWarning("Could not find at least two daily notes to forward tasks.");
     return;
   }
@@ -44,5 +43,5 @@ export async function forwardTasks(app: App, date: Temporal.PlainDate): Promise<
   }
 
   // Apply the tasks into the current daily note
-  await applyTasks(app, today, actionableTasks);
+  await applyTasks(app, file, actionableTasks);
 }

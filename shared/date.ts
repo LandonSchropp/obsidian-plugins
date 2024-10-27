@@ -1,7 +1,7 @@
 import { Temporal } from "@js-temporal/polyfill";
 
 const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
-const WEEK_DATE_REGEX = /^\d{4}-W\d{2}$/;
+const WEEK_DATE_REGEX = /^(\d{4})-W(\d{2})$/;
 
 /**
  * @param date The date to get the start of the week for.

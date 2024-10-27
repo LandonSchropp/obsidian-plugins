@@ -10,19 +10,22 @@ fi
 OBSIDIAN_DEVELOPMENT_VAULT=$(realpath "$OBSIDIAN_DEVELOPMENT_VAULT")
 ROOT_DIRECTORY=$(dirname "$(dirname "$(realpath "$0")")")
 SOURCE_DIRECTORY="$ROOT_DIRECTORY/plugins"
-DIST_DIRECTORY="$ROOT_DIRECTORY/dist"
 DEVELOPMENT_PLUGINS_DIRECTORY="$OBSIDIAN_DEVELOPMENT_VAULT/.obsidian/plugins"
 
 for PLUGIN_SOURCE_DIRECTORY in "$SOURCE_DIRECTORY"/*; do
   # Generate the plugin paths
   BASENAME=$(basename "$PLUGIN_SOURCE_DIRECTORY")
-  PLUGIN_DIST_DIRECTORY="$DIST_DIRECTORY/$BASENAME"
   PLUGIN_DEVELOPMENT_DIRECTORY="$DEVELOPMENT_PLUGINS_DIRECTORY/$BASENAME"
 
-  # Create the symlinks
+  # Create the plugin directory.
   mkdir -p "$PLUGIN_DEVELOPMENT_DIRECTORY"
-  ln -fs "$PLUGIN_DIST_DIRECTORY"/main.js "$PLUGIN_DEVELOPMENT_DIRECTORY"/main.js
-  ln -fs "$PLUGIN_SOURCE_DIRECTORY"/manifest.json "$PLUGIN_DEVELOPMENT_DIRECTORY"/manifest.json
+
+  # Create a hotreload file so Hot Reload will run on the plugin.
+  touch "$PLUGIN_DEVELOPMENT_DIRECTORY"/.hotreload
+
+  # Copy the manifest.
+  rm -f "$PLUGIN_DEVELOPMENT_DIRECTORY"/manifest.json
+  cp "$PLUGIN_SOURCE_DIRECTORY"/manifest.json "$PLUGIN_DEVELOPMENT_DIRECTORY"/manifest.json
 done
 
 # Start the development server.

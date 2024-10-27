@@ -7,25 +7,26 @@ if [ -z "$OBSIDIAN_DEVELOPMENT_VAULT" ]; then
 fi
 
 # Generate the paths
-OBSIDIAN_DEVELOPMENT_VAULT=$(realpath "$OBSIDIAN_DEVELOPMENT_VAULT")
-ROOT_DIRECTORY=$(dirname "$(dirname "$(realpath "$0")")")
-SOURCE_DIRECTORY="$ROOT_DIRECTORY/plugins"
-DEVELOPMENT_PLUGINS_DIRECTORY="$OBSIDIAN_DEVELOPMENT_VAULT/.obsidian/plugins"
+OBSIDIAN_VAULT=$(realpath "$OBSIDIAN_DEVELOPMENT_VAULT")
+VAULT_PLUGINS="$OBSIDIAN_VAULT/.obsidian/plugins"
 
-for PLUGIN_SOURCE_DIRECTORY in "$SOURCE_DIRECTORY"/*; do
+ROOT=$(dirname "$(dirname "$(realpath "$0")")")
+SOURCE="$ROOT/plugins"
+
+for PLUGIN_SOURCE in "$SOURCE"/*; do
   # Generate the plugin paths
-  BASENAME=$(basename "$PLUGIN_SOURCE_DIRECTORY")
-  PLUGIN_DEVELOPMENT_DIRECTORY="$DEVELOPMENT_PLUGINS_DIRECTORY/$BASENAME"
+  PLUGIN_NAME=$(basename "$PLUGIN_SOURCE")
+  VAULT_PLUGIN="$VAULT_PLUGINS/$PLUGIN_NAME"
 
   # Create the plugin directory.
-  mkdir -p "$PLUGIN_DEVELOPMENT_DIRECTORY"
+  mkdir -p "$VAULT_PLUGIN"
 
   # Create a hotreload file so Hot Reload will run on the plugin.
-  touch "$PLUGIN_DEVELOPMENT_DIRECTORY"/.hotreload
+  touch "$VAULT_PLUGIN"/.hotreload
 
   # Copy the manifest.
-  rm -f "$PLUGIN_DEVELOPMENT_DIRECTORY"/manifest.json
-  cp "$PLUGIN_SOURCE_DIRECTORY"/manifest.json "$PLUGIN_DEVELOPMENT_DIRECTORY"/manifest.json
+  rm -f "$VAULT_PLUGIN"/manifest.json
+  cp "$PLUGIN_SOURCE"/manifest.json "$VAULT_PLUGIN"/manifest.json
 done
 
 # Start the development server.

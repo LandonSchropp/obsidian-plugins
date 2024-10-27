@@ -6,5 +6,5 @@
   "minAppVersion": "1.6.7",
   "author": "Landon Schropp",
   "authorUrl": "https://www.landonschropp.com",
-  "isDesktopOnly": true
+  "isDesktopOnly": false
 }

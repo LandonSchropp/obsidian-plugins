@@ -1,6 +1,6 @@
 import { Plugin } from "obsidian";
 import { cleanNote } from "./clean-note";
-import { findPreviousDailyNote, isCurrentDailyNote } from "../../shared/daily-notes";
+import { findPreviousPeriodicNote, isPeriodicNote } from "../../shared/daily-notes";
 import { isFile } from "../../shared/files";
 
 export default class TaskForwarderPlugin extends Plugin {
@@ -18,17 +18,17 @@ export default class TaskForwarderPlugin extends Plugin {
       },
     });
 
-    // Run the forwarder when a new daily note is created.
+    // Run the forwarder when a new periodic is created.
     this.registerEvent(
       this.app.vault.on("create", (file) => {
-        if (!isFile(file) || !isCurrentDailyNote(file)) {
+        if (!isFile(file) || !isPeriodicNote(file)) {
           return;
         }
 
-        const previousDailyNote = findPreviousDailyNote(this.app, file);
+        const previousNote = findPreviousPeriodicNote(this.app, file);
 
-        if (previousDailyNote) {
-          cleanNote(this.app, previousDailyNote);
+        if (previousNote) {
+          cleanNote(this.app, previousNote);
         }
       }),
     );

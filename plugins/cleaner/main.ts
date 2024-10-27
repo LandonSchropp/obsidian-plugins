@@ -1,6 +1,6 @@
 import { Plugin } from "obsidian";
 import { cleanNote } from "./clean-note";
-import { findPreviousPeriodicNote, isPeriodicNote } from "../../shared/daily-notes";
+import { findPreviousPeriodicNote, isPeriodicNote } from "../../shared/periodic-notes";
 import { isFile } from "../../shared/files";
 
 export default class TaskForwarderPlugin extends Plugin {

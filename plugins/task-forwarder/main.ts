@@ -1,6 +1,6 @@
 import { Plugin } from "obsidian";
 import { forwardTasks } from "./forward-tasks";
-import { fetchCurrentDailyNote } from "../../shared/daily-notes";
+import { fetchCurrentDailyNote } from "../../shared/periodic-notes";
 import { isFile } from "../../shared/files";
 
 export default class TaskForwarderPlugin extends Plugin {

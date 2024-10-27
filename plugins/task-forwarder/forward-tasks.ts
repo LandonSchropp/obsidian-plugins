@@ -2,7 +2,7 @@ import { App, TFile } from "obsidian";
 import { applyTasks } from "./apply-tasks";
 import { importTasks } from "./import-tasks";
 import { displayWarning } from "./notifications";
-import { findPreviousDailyNote } from "../../shared/daily-notes";
+import { findPreviousDailyNote } from "../../shared/periodic-notes";
 import {
   FORWARDED_TYPE,
   SCHEDULED_TYPE,

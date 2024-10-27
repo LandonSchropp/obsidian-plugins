@@ -5,8 +5,8 @@ import { formatWeek, parsePlainDate, parseWeekPlainDate } from "./date";
 // TODO: All of these functions are specific to _my_ periodic notes setup. At some point, these
 // could instead be pulled from the daily note and periodic note settings.
 
-const DAILY_NOTE_REGEX = /^\d{4}-\d{2}-\d{2} - Daily Note$/;
-const WEEKLY_NOTE_REGEX = /^\d{4}-W\d{2} - Weekly Note$/;
+const DAILY_NOTE_REGEX = /^\d{4}-\d{2}-\d{2} - Daily Note.md$/;
+const WEEKLY_NOTE_REGEX = /^\d{4}-W\d{2} - Weekly Note.md$/;
 
 const DAILY_NOTES_FOLDER = "Daily Notes";
 const WEEKLY_NOTES_FOLDER = "Weekly Notes";
@@ -17,11 +17,7 @@ const WEEKLY_NOTES_FOLDER = "Weekly Notes";
  * @returns True if the file is a daily note, false otherwise.
  */
 export function isDailyNote(file: TFile): boolean {
-  return (
-    file.path.startsWith(DAILY_NOTES_FOLDER) &&
-    !!file.name.match(DAILY_NOTE_REGEX) &&
-    file.extension === "md"
-  );
+  return file.path.startsWith(DAILY_NOTES_FOLDER) && !!file.name.match(DAILY_NOTE_REGEX);
 }
 
 /**
@@ -30,11 +26,7 @@ export function isDailyNote(file: TFile): boolean {
  * @returns True if the file is a weekly note, false otherwise.
  */
 export function isWeeklyNote(file: TFile): boolean {
-  return (
-    file.path.startsWith(WEEKLY_NOTES_FOLDER) &&
-    !!file.name.match(WEEKLY_NOTE_REGEX) &&
-    file.extension === "md"
-  );
+  return file.path.startsWith(WEEKLY_NOTES_FOLDER) && !!file.name.match(WEEKLY_NOTE_REGEX);
 }
 
 /**

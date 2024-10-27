@@ -10,7 +10,7 @@ export default class TaskForwarderPlugin extends Plugin {
       name: "Clean Current Note",
       icon: "eraser",
       editorCallback: (_editor, context) => {
-        if (!context.file) {
+        if (!isFile(context.file)) {
           return;
         }
 

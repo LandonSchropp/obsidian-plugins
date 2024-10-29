@@ -1,0 +1,10 @@
+{
+  "id": "extractor",
+  "name": "Extractor",
+  "description": "Extracts selected text into a new note",
+  "version": "0.0.0",
+  "minAppVersion": "1.6.7",
+  "author": "Landon Schropp",
+  "authorUrl": "https://www.landonschropp.com",
+  "isDesktopOnly": false
+}

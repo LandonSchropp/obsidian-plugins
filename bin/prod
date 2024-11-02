@@ -22,10 +22,12 @@ for PLUGIN_SOURCE in "$SOURCE"/*; do
   # Generate the plugin paths
   PLUGIN_NAME=$(basename "$PLUGIN_SOURCE")
   PLUGIN_DIST="$DIST/$PLUGIN_NAME"
-  VAULT_PLUGINS="$VAULT_PLUGINS/$PLUGIN_NAME"
+  VAULT_PLUGIN="$VAULT_PLUGINS/$PLUGIN_NAME"
+
+  mkdir -p "$VAULT_PLUGIN"
 
   # Copy the build files
-  mkdir -p "$VAULT_PLUGINS"
-  cp "$PLUGIN_DIST"/main.js "$VAULT_PLUGINS"/main.js
-  cp "$PLUGIN_SOURCE"/manifest.json "$VAULT_PLUGINS"/manifest.json
+  mkdir -p "$VAULT_PLUGIN"
+  cp "$PLUGIN_DIST"/main.js "$VAULT_PLUGIN"/main.js
+  cp "$PLUGIN_SOURCE"/manifest.json "$VAULT_PLUGIN"/manifest.json
 done

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 # Ensure the vault variable is defined.
 if [ -z "$OBSIDIAN_VAULT" ]; then
   echo "The OBSIDIAN_VAULT variable must be defined."

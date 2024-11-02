@@ -1,6 +1,7 @@
 import { App, Editor, TFolder } from "obsidian";
 import { createFileWithTemplate } from "./templater";
 import { ExtractionSettings } from "./types";
+import { Temporal } from "@js-temporal/polyfill";
 
 function extractionFolder(app: App, extraction: ExtractionSettings): TFolder {
   const slashIndex = extraction.fileName.lastIndexOf("/");
@@ -26,13 +27,12 @@ function extractionFolder(app: App, extraction: ExtractionSettings): TFolder {
 function extractionBaseFileName(extraction: ExtractionSettings): string {
   const slashIndex = extraction.fileName.lastIndexOf("/");
 
-  if (slashIndex === -1) {
-    return extraction.fileName;
-  }
+  const fileName =
+    slashIndex === -1 ? extraction.fileName : extraction.fileName.slice(slashIndex + 1);
 
-  // TODO: Make this format the file.
-
-  return extraction.fileName.slice(slashIndex + 1);
+  // TODO: This won't work in the general case, but since the file names are constants right now, I
+  // can get away with it.
+  return fileName.replace(/{{\s*date\s*}}/g, Temporal.Now.plainDateISO().toString());
 }
 
 /**

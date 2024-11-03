@@ -20,7 +20,8 @@ const TASK_LIST_ITEM_END_REGEX = /\[(.)\] $/;
  * @returns True if the provided line is a task list item, false otherwise.
  */
 export function isTaskListItem(line: string): boolean {
-  return isListItem(line) && TASK_LIST_ITEM_END_REGEX.test(line);
+  const listItem = extractListItemMarker(line);
+  return isListItem(listItem) && TASK_LIST_ITEM_END_REGEX.test(listItem);
 }
 
 /**

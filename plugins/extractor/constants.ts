@@ -6,13 +6,19 @@ export const EXTRACTIONS: ExtractionSettings[] = [
   {
     name: "Thought",
     icon: "leaf",
-    template: "Templates/Thought.md",
+    template: "Templates/Thoughts/Thought.md",
     fileName: "Resources/Thoughts/{{date}} - Thought",
   },
   {
     name: "Idea",
     icon: "lightbulb",
-    template: "Templates/Idea.md",
+    template: "Templates/Thoughts/Idea.md",
     fileName: "Resources/Ideas/{{date}} - Idea",
+  },
+  {
+    name: "Question",
+    icon: "question-mark-glyph",
+    template: "Templates/Thoughts/Question.md",
+    fileName: "Resources/Questions/{{date}} - Question",
   },
 ];

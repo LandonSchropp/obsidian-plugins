@@ -1,6 +1,6 @@
 import { Plugin } from "obsidian";
 import { forwardTasks } from "./forward-tasks";
-import { fetchCurrentDailyNote, isDailyNote } from "../../shared/periodic-notes";
+import { fetchCurrentDailyNote, isCurrentDailyNote } from "../../shared/periodic-notes";
 import { isFile } from "../../shared/files";
 
 export default class TaskForwarderPlugin extends Plugin {
@@ -36,7 +36,7 @@ export default class TaskForwarderPlugin extends Plugin {
     this.app.workspace.onLayoutReady(() => {
       this.registerEvent(
         this.app.vault.on("create", (file) => {
-          if (!isFile(file) || !isDailyNote(file)) {
+          if (!isFile(file) || !isCurrentDailyNote(file)) {
             return;
           }
 

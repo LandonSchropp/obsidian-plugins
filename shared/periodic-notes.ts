@@ -116,20 +116,35 @@ export function findDailyNote(app: App, date: Temporal.PlainDate): TFile | undef
 }
 
 /**
+ * Fetches several daily notes prior to the provided file.
+ * @param app The Obsidian app instance.
+ * @param file The file to find the previous notes for.
+ * @param count The number of previous daily notes to find.
+ * @returns The previous daily notes, ordered from most recent to least recent. If there are fewer
+ * than `count` daily notes, the array will contain all available daily notes prior to the current
+ * note.
+ */
+export function findPreviousDailyNotes(app: App, file: TFile, count: number): TFile[] {
+  return (
+    fetchDailyNotes(app)
+      // Filter out the daily notes that occur later than the provided file
+      .filter((note) => note.name < file.name)
+      // Sort the daily notes in descending order
+      .sort((file1, file2) => file2.name.localeCompare(file1.name))
+      // Return the first `count` daily notes
+      .slice(0, count)
+  );
+}
+
+/**
  * Fetches previous periodic note.
  * @param app The Obsidian app instance.
  * @returns The file representing the previous daily note (likely yesterday), or undefined if it
  * doesn't exist.
  */
 export function findPreviousDailyNote(app: App, file: TFile): TFile | undefined {
-  const date = parseDateFromDailyNote(file);
-
-  if (!date) {
-    return undefined;
-  }
-
-  const yesterday = date.subtract({ days: 1 }).toString();
-  return fetchDailyNotes(app).find((note) => note.name.startsWith(yesterday));
+  console.log(findPreviousDailyNotes(app, file, 5)[0]);
+  return findPreviousDailyNotes(app, file, 5)[0];
 }
 
 /**

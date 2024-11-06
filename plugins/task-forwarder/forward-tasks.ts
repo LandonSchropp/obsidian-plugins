@@ -1,5 +1,5 @@
 import { App, TFile } from "obsidian";
-import { applyTasks } from "./apply-tasks";
+import { addTasks } from "./add-tasks";
 import { importTasks } from "./import-tasks";
 import { displayWarning } from "./notifications";
 import { findPreviousDailyNote } from "../../shared/periodic-notes";
@@ -9,6 +9,7 @@ import {
   INCOMPLETE_TYPE,
   TO_DO_TYPE,
 } from "../../shared/task-list-items";
+import { removeTasks } from "./remove-tasks";
 
 export const ACTIONABLE_TASK_TYPES = [FORWARDED_TYPE, SCHEDULED_TYPE, INCOMPLETE_TYPE];
 
@@ -27,7 +28,7 @@ export async function forwardTasks(app: App, file: TFile): Promise<void> {
     return;
   }
 
-  // Remove any scheduled tasks from the previous notes
+  // Import the tasks from the previous daily note
   const tasks = await importTasks(app, yesterday);
 
   // Filter out the incomplete tasks
@@ -42,6 +43,10 @@ export async function forwardTasks(app: App, file: TFile): Promise<void> {
     return;
   }
 
-  // Apply the tasks into the current daily note
-  await applyTasks(app, file, actionableTasks);
+  // Remove the scheduled tasks from the previous daily note
+  const scheduledTasks = tasks.filter((task) => task.type === SCHEDULED_TYPE);
+  await removeTasks(app, yesterday, scheduledTasks);
+
+  // Add the tasks into the current daily note
+  await addTasks(app, file, actionableTasks);
 }

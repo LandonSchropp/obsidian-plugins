@@ -1,9 +1,9 @@
 import { App, TFile } from "obsidian";
 import { Task } from "./types";
 import { displayNeutral, displaySuccess } from "./notifications";
-import { parseTasks } from "./parse-tasks";
 import { SCHEDULED_TYPE } from "../../shared/task-list-items";
 import { pluralize } from "../../shared/string";
+import { parseTasks } from "./parse-tasks";
 
 /** The regular expression used to determine the tasks section. */
 export const TASKS_HEADING_REGEX = /tasks/i;
@@ -18,12 +18,12 @@ function convertTaskToString(task: Task): string {
 }
 
 /**
- * This method modifies the provided note, applying the tasks to it.
+ * This method modifies the provided note, adding the tasks to it.
  * @param app The Obsidian application instance.
- * @param file The note to apply the tasks to.
- * @param tasks The tasks to apply to the note.
+ * @param file The note to add the tasks to.
+ * @param tasks The tasks to add to the note.
  */
-export async function applyTasks(app: App, file: TFile, tasks: Task[]): Promise<void> {
+export async function addTasks(app: App, file: TFile, tasks: Task[]): Promise<void> {
   const lines = (await app.vault.read(file)).split("\n");
   const existingTasks = parseTasks(lines);
 

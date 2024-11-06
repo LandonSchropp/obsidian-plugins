@@ -1,17 +1,23 @@
 import { App, TFile } from "obsidian";
+import { Temporal } from "@js-temporal/polyfill";
 import { addTasks } from "./add-tasks";
 import { importTasks } from "./import-tasks";
 import { displayWarning } from "./notifications";
-import { findPreviousDailyNote } from "../../shared/periodic-notes";
-import {
-  FORWARDED_TYPE,
-  SCHEDULED_TYPE,
-  INCOMPLETE_TYPE,
-  TO_DO_TYPE,
-} from "../../shared/task-list-items";
+import { findPreviousDailyNote, parseDateFromDailyNote } from "../../shared/periodic-notes";
+import { FORWARDED_TYPE, SCHEDULED_TYPE, TO_DO_TYPE } from "../../shared/task-list-items";
 import { removeTasks } from "./remove-tasks";
+import { Task } from "./types";
 
-export const ACTIONABLE_TASK_TYPES = [FORWARDED_TYPE, SCHEDULED_TYPE, INCOMPLETE_TYPE];
+/**
+ * @param task The task to check.
+ * @returns Whether the task is actionable.
+ */
+function isActionableTask(task: Task, date: Temporal.PlainDate): boolean {
+  return (
+    task.type === FORWARDED_TYPE ||
+    (task.type === SCHEDULED_TYPE && (task.date === null || task.date.equals(date)))
+  );
+}
 
 /**
  * Forward tasks from the previous daily note to the provided file.
@@ -19,6 +25,14 @@ export const ACTIONABLE_TASK_TYPES = [FORWARDED_TYPE, SCHEDULED_TYPE, INCOMPLETE
  * @param file The daily note to forward tasks to.
  */
 export async function forwardTasks(app: App, file: TFile): Promise<void> {
+  // Grab the date from the file
+  const date = parseDateFromDailyNote(file);
+
+  if (date === undefined) {
+    displayWarning("The file is not a daily note.");
+    return;
+  }
+
   // Fetch the daily notes
   const yesterday = findPreviousDailyNote(app, file);
 
@@ -30,15 +44,12 @@ export async function forwardTasks(app: App, file: TFile): Promise<void> {
 
   // Import the tasks from the previous daily note
   const tasks = await importTasks(app, yesterday);
-
-  // Filter out the incomplete tasks
-  const incompleteTasks = tasks.filter((task) => task.type === TO_DO_TYPE);
-  const actionableTasks = tasks.filter((task) => ACTIONABLE_TASK_TYPES.includes(task.type));
+  const actionableTasks = tasks.filter((task) => isActionableTask(task, date));
 
   // If there are any incomplete tasks, display a warning and stop importing.
-  if (incompleteTasks.length > 0) {
+  if (tasks.filter(({ type }) => type === TO_DO_TYPE).length > 0) {
     displayWarning(
-      "Some tasks from the previous daily note are incomplete! Please complete them before forwarding.",
+      "Some tasks from the previous daily note are incomplete! Please update them before forwarding.",
     );
     return;
   }

@@ -4,6 +4,8 @@ import { displayNeutral, displaySuccess } from "./notifications";
 import { SCHEDULED_TYPE } from "../../shared/task-list-items";
 import { pluralize } from "../../shared/string";
 import { parseTasks } from "./parse-tasks";
+import { parseDateFromDailyNote } from "../../shared/periodic-notes";
+import { importTasks } from "./import-tasks";
 
 /** The regular expression used to determine the tasks section. */
 export const TASKS_HEADING_REGEX = /tasks/i;
@@ -25,7 +27,7 @@ function convertTaskToString(task: Task): string {
  */
 export async function addTasks(app: App, file: TFile, tasks: Task[]): Promise<void> {
   const lines = (await app.vault.read(file)).split("\n");
-  const existingTasks = parseTasks(lines);
+  const existingTasks = await importTasks(app, file);
 
   // Find the header line
   const headerIndex = lines.findIndex((line) => TASKS_HEADING_REGEX.test(line));

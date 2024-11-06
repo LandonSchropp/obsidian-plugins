@@ -1,6 +1,7 @@
 import { App, TFile } from "obsidian";
 import { Task } from "./types";
-import { parseTasks } from "./parse-tasks";
+import { parseDateFromDailyNote } from "../../shared/periodic-notes";
+import { parseTask } from "./parse-task";
 
 /**
  * Imports the task from the provided note.
@@ -10,6 +11,14 @@ import { parseTasks } from "./parse-tasks";
  * @returns The actionable tasks from the note.
  */
 export async function importTasks(app: App, file: TFile): Promise<Task[]> {
-  const lines = (await app.vault.read(file)).split("\n");
-  return parseTasks(lines);
+  const date = parseDateFromDailyNote(file);
+
+  if (date === undefined) {
+    throw new Error("The file is not a daily note.");
+  }
+
+  return (await app.vault.read(file))
+    .split("\n")
+    .map((line, index) => parseTask(line, index, date))
+    .filter((task) => task !== undefined);
 }

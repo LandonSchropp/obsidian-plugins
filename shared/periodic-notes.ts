@@ -59,7 +59,8 @@ function fetchWeeklyNotes(app: App): TFile[] {
  * @returns True if the provided file is the daily note for today, false otherwise.
  */
 export function isCurrentDailyNote(file: TFile): boolean {
-  return isDailyNote(file) && parseDateFromDailyNote(file) === Temporal.Now.plainDateISO();
+  const date = parseDateFromDailyNote(file);
+  return isDailyNote(file) && date !== undefined && date.equals(Temporal.Now.plainDateISO());
 }
 
 /**
@@ -143,7 +144,6 @@ export function findPreviousDailyNotes(app: App, file: TFile, count: number): TF
  * doesn't exist.
  */
 export function findPreviousDailyNote(app: App, file: TFile): TFile | undefined {
-  console.log(findPreviousDailyNotes(app, file, 5)[0]);
   return findPreviousDailyNotes(app, file, 5)[0];
 }
 

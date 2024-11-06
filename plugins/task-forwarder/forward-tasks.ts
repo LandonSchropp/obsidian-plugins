@@ -12,10 +12,10 @@ import { Task } from "./types";
  * @param task The task to check.
  * @returns Whether the task is actionable.
  */
-function isActionableTask(task: Task, date: Temporal.PlainDate): boolean {
+function isActionableTask(task: Task): boolean {
   return (
-    task.type === FORWARDED_TYPE ||
-    (task.type === SCHEDULED_TYPE && (task.date === null || task.date.equals(date)))
+    (task.type === FORWARDED_TYPE || task.type === SCHEDULED_TYPE) &&
+    task.date.equals(Temporal.Now.plainDateISO())
   );
 }
 
@@ -28,12 +28,13 @@ export async function forwardTasks(app: App, file: TFile): Promise<void> {
   // Grab the date from the file
   const date = parseDateFromDailyNote(file);
 
+  // Ignore the file if it's not a daily note.
   if (date === undefined) {
     displayWarning("The file is not a daily note.");
     return;
   }
 
-  // Fetch the daily notes
+  // Fetch the previous daily notes
   const yesterday = findPreviousDailyNote(app, file);
 
   // Ensure the file is a daily note and the previous daily note exists.
@@ -44,9 +45,11 @@ export async function forwardTasks(app: App, file: TFile): Promise<void> {
 
   // Import the tasks from the previous daily note
   const tasks = await importTasks(app, yesterday);
-  const actionableTasks = tasks.filter((task) => isActionableTask(task, date));
+  const actionableTasks = tasks.filter(isActionableTask);
 
   // If there are any incomplete tasks, display a warning and stop importing.
+  //
+  // TODO: This should check all of the files, not just the previous one.
   if (tasks.filter(({ type }) => type === TO_DO_TYPE).length > 0) {
     displayWarning(
       "Some tasks from the previous daily note are incomplete! Please update them before forwarding.",
@@ -54,8 +57,9 @@ export async function forwardTasks(app: App, file: TFile): Promise<void> {
     return;
   }
 
-  // Remove the scheduled tasks from the previous daily note
-  const scheduledTasks = tasks.filter((task) => task.type === SCHEDULED_TYPE);
+  // Remove the scheduled tasks from the previous daily note that are being moved to the current
+  // note.
+  const scheduledTasks = actionableTasks.filter((task) => task.type === SCHEDULED_TYPE);
   await removeTasks(app, yesterday, scheduledTasks);
 
   // Add the tasks into the current daily note

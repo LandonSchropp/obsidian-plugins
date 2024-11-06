@@ -1,6 +1,9 @@
+import { Temporal } from "@js-temporal/polyfill";
 import { extractListItemText } from "../../shared/list-items";
 import { extractTaskMarkerType, isTaskListItem } from "../../shared/task-list-items";
 import { Task } from "./types";
+
+const TASK_DATE_REGEX = /(.*?)\s*\(?(\d{4}-\d{2}-\d{2})\)?\s*$/;
 
 /**
  * Parses a line of text into a Task object.
@@ -13,12 +16,16 @@ export function parseTask(line: string, lineNumber: number): Task | undefined {
     return;
   }
 
-  const text = extractListItemText(line);
+  let text = extractListItemText(line);
   const type = extractTaskMarkerType(line);
+  let date = null;
 
-  return {
-    type,
-    text,
-    lineNumber,
-  };
+  const dateMatch = text.match(TASK_DATE_REGEX);
+
+  if (dateMatch !== null) {
+    text = dateMatch[1];
+    date = Temporal.PlainDate.from(dateMatch[2]);
+  }
+
+  return { type, text, lineNumber, date };
 }

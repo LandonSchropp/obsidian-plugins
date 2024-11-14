@@ -1,10 +1,6 @@
 import { App, TFile } from "obsidian";
 import { Task } from "./types";
-import { displayNeutral, displaySuccess } from "./notifications";
 import { SCHEDULED_TYPE } from "../../shared/task-list-items";
-import { pluralize } from "../../shared/string";
-import { parseTasks } from "./parse-tasks";
-import { parseDateFromDailyNote } from "../../shared/periodic-notes";
 import { importTasks } from "./import-tasks";
 
 /** The regular expression used to determine the tasks section. */

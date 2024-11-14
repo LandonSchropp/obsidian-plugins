@@ -38,12 +38,6 @@ export async function addTasks(app: App, file: TFile, tasks: Task[]): Promise<vo
     return !existingTasks.some((existingTask) => existingTask.text === task.text);
   });
 
-  // If there aren't any tasks to import, display a notice and return
-  if (tasks.length === 0) {
-    displayNeutral("There are no tasks to forward.");
-    return;
-  }
-
   // Replace the task markers for everything but scheduled tasks
   tasks = tasks.map((task) => {
     return {
@@ -60,9 +54,4 @@ export async function addTasks(app: App, file: TFile, tasks: Task[]): Promise<vo
   ];
 
   await app.vault.modify(file, replacementLines.join("\n"));
-
-  // Display a success message.
-  displaySuccess(
-    `Forwarded ${tasks.length} ${pluralize("task", tasks.length)} to the current daily note.`,
-  );
 }

@@ -6,11 +6,6 @@ const COMMENT_REGEX = /<!--.*?-->/gs;
 // Matches an empty list item. This handles bullet, numbered, and task list items.
 const EMPTY_LIST_ITEM_REGEX = /^[ \t]*(?:[-*]|\d+\.)(?:[ \t]+\[.\])?[ \t]*$/gm;
 
-// NOTE: The double negative at the end of the regex is to ensure that a header character must be
-// following the "empty" section.
-// following.
-const EMPTY_SECTION_REGEX = /#{1,6} [^\n]+[\n \t]*(?=#|$)/gms;
-
 // Matches headers with only whitespace content below them. These will _not_ match sections that
 // have child headers.
 //

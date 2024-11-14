@@ -15,23 +15,23 @@
   "author": "Landon Schropp <schroppl@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@eslint/js": "^9.12.0",
-    "@types/node": "^22.7.5",
+    "@eslint/js": "^9.14.0",
+    "@types/node": "^22.9.0",
     "esbuild": "0.24.0",
-    "eslint": "^9.12.0",
+    "eslint": "^9.14.0",
     "eslint-config-prettier": "^9.1.0",
-    "globals": "^15.11.0",
+    "globals": "^15.12.0",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
-    "obsidian": "latest",
+    "obsidian": "^1.7.2",
     "prettier": "^3.3.3",
     "tsc-files": "^1.1.4",
-    "tslib": "2.7.0",
+    "tslib": "2.8.1",
     "typescript": "5.6.3",
-    "typescript-eslint": "^8.9.0"
+    "typescript-eslint": "^8.14.0"
   },
   "dependencies": {
-    "@codemirror/view": "^6.34.1",
+    "@codemirror/view": "^6.34.2",
     "@js-temporal/polyfill": "^0.4.4"
   }
 }

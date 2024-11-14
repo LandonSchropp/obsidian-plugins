@@ -5,7 +5,7 @@ import typescript from "typescript-eslint";
 
 export default [
   {
-    ignores: ["main.js"],
+    ignores: ["dist/**"],
   },
   javascript.configs.recommended,
   ...typescript.configs.recommended,

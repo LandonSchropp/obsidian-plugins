@@ -1,11 +1,7 @@
-import {
-  findListItemSegment,
-  findReplacementListItem,
-  isNumberListItem,
-} from "commands/list-items";
+import { findListItemSegment, findReplacementListItem, isNumberListItem } from "./list-items";
 import { Editor } from "obsidian";
-import { getCursor, getLine, moveCursorToEndOfLineItem } from "utilities/editor";
-import { hasSameWhitespace } from "utilities/lines";
+import { getCursor, getLine, moveCursorToEndOfLineItem } from "../utilities/editor";
+import { hasSameWhitespace } from "../utilities/lines";
 
 /**
  * Starting at the provided line and working backward, this function tries to find the first

@@ -1,8 +1,8 @@
-import { GroupSettingsView } from "settings/group-settings-view";
-import ListCyclerPlugin from "main";
+import { GroupSettingsView } from "./group-settings-view";
+import ListCyclerPlugin from "../main";
 import { App, PluginSettingTab, Setting } from "obsidian";
-import { Settings, GroupSettings } from "types";
-import { splice } from "utilities/array";
+import { Settings, GroupSettings } from "../types";
+import { splice } from "../utilities/array";
 import { EditGroupNameModal } from "./edit-group-name-modal";
 import { EMPTY_GROUP } from "./constants";
 
@@ -62,7 +62,7 @@ export class SettingsView extends PluginSettingTab {
       .setName("List Cycler")
       .setDesc(
         "Configure the groups and list items to cycle through. For each group, List Cycler " +
-          "will generate commands for you to cycle through the list items.",
+        "will generate commands for you to cycle through the list items.",
       );
 
     titleSetting.nameEl.style.fontSize = "var(--h2-size)";

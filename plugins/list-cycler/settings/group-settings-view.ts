@@ -1,8 +1,8 @@
-import { ListItemSettingsView } from "settings/list-item-settings-view";
+import { ListItemSettingsView } from "./list-item-settings-view";
 import { Setting } from "obsidian";
-import { SettingsView } from "settings/settings-view";
-import { GroupSettings, ListItemSettings } from "types";
-import { splice } from "utilities/array";
+import { SettingsView } from "./settings-view";
+import { GroupSettings, ListItemSettings } from "../types";
+import { splice } from "../utilities/array";
 import { ConfirmDeleteModal } from "./confirm-delete-modal";
 import { EditGroupNameModal } from "./edit-group-name-modal";
 import { EMPTY_LIST_ITEM } from "./constants";

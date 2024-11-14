@@ -1,4 +1,4 @@
-import { GroupSettings, ListItemSettings, Settings } from "types";
+import { GroupSettings, ListItemSettings, Settings } from "../types";
 
 /** An empty list item. */
 export const EMPTY_LIST_ITEM: ListItemSettings = {

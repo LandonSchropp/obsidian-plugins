@@ -1,4 +1,4 @@
-import { findListItemSegment } from "commands/list-items";
+import { findListItemSegment } from "../commands/list-items";
 import { Editor, EditorPosition } from "obsidian";
 
 type Line = {

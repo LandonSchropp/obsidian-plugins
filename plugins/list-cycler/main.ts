@@ -1,16 +1,16 @@
-import { cycleListItemBackward, cycleListItemForward } from "commands/commands";
+import { cycleListItemBackward, cycleListItemForward } from "./commands/commands";
 import { Plugin } from "obsidian";
-import { SettingsView } from "settings/settings-view";
+import { SettingsView } from "./settings/settings-view";
 import { GroupSettings, Settings } from "./types";
-import { kebabCase } from "utilities/string";
-import { sanitizeListItem } from "settings/sanitize";
+import { kebabCase } from "./utilities/string";
+import { sanitizeListItem } from "./settings/sanitize";
 import {
   BULLET_LIST_ITEM,
   DEFAULT_SETTINGS,
   EMPTY_LIST_ITEM,
   NUMBER_LIST_ITEM,
   TASK_LIST_ITEM,
-} from "settings/constants";
+} from "./settings/constants";
 
 export default class ListCyclerPlugin extends Plugin {
   settings: Settings;
@@ -56,7 +56,7 @@ export default class ListCyclerPlugin extends Plugin {
     this.addSettingTab(new SettingsView(this.app, this));
   }
 
-  onunload() {}
+  onunload() { }
 
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());

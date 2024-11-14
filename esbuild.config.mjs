@@ -17,6 +17,7 @@ const context = await esbuild.context({
   entryPoints: [
     "plugins/cleaner/main.ts",
     "plugins/extractor/main.ts",
+    "plugins/list-cycler/main.ts",
     "plugins/list-item-deleter/main.ts",
     "plugins/task-forwarder/main.ts",
   ],

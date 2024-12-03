@@ -29,9 +29,9 @@ const CUSTOM_REGEXES = [
 
 // All of the regular expression to remove in the note.
 const REMOVAL_REGEXES = [
+  ...CUSTOM_REGEXES,
   COMMENT_REGEX,
   EMPTY_LIST_ITEM_REGEX,
-  ...CUSTOM_REGEXES,
   ...EMPTY_SECTION_REGEXES,
   WHITESPACE_REGEX,
 ];

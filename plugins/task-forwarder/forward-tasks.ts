@@ -60,7 +60,6 @@ export async function forwardTasks(app: App, file: TFile): Promise<void> {
       displayWarning(
         `Some tasks from '${file.name}' are incomplete! Please update the file before forwarding.`,
       );
-      return;
     }
   }
 

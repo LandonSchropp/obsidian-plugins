@@ -12,6 +12,9 @@ import { pluralize } from "../../shared/string";
 /** The number of previous daily notes to fetch and parse for scheduled tasks. */
 const NUMBER_OF_PREVIOUS_DAILY_NOTES = 30;
 
+/** The path of the file that contains the list of file to clean up. */
+const CLEAN_UP_FILE_PATH = "Triage/Task Forwarder Cleanup.md";
+
 /**
  * @param task The task to check.
  * @param date The date of the daily note the task is being forwarded to.
@@ -53,14 +56,36 @@ export async function forwardTasks(app: App, file: TFile): Promise<void> {
     previousDailyNoteTasks.push([previousDailyNote, tasks]);
   }
 
-  // If there are any incomplete tasks, display a warning and stop importing _before_ mutating any
-  // files.
+  // Make a list of all of the files with incomplete tasks.
+  const incompleteFiles: TFile[] = [];
+
   for (const [file, tasks] of previousDailyNoteTasks) {
     if (tasks.filter(({ type }) => type === TO_DO_TYPE).length > 0) {
-      displayWarning(
-        `Some tasks from '${file.name}' are incomplete! Please update the file before forwarding.`,
-      );
+      incompleteFiles.push(file);
     }
+  }
+
+  // Remove the clean up file if it already exists.
+  const existingCleanupFile = app.vault.getAbstractFileByPath(CLEAN_UP_FILE_PATH);
+
+  if (existingCleanupFile instanceof TFile) {
+    await app.vault.delete(existingCleanupFile);
+  }
+
+  // If there are any incomplete tasks, display a warning and create a clean up file.
+  if (incompleteFiles.length > 0) {
+    displayWarning(
+      `Some tasks are incomplete! Please resolve all of the files in Task Forwareder Cleanup.`,
+    );
+
+    const cleanupContent = [
+      "_The following files have incomplete tasks that need to be resolved before running the " +
+        "task forwarderer._",
+      "",
+      ...incompleteFiles.map((file) => `- [[${file.basename}]]`),
+    ].join("\n");
+
+    await app.vault.create(CLEAN_UP_FILE_PATH, cleanupContent);
   }
 
   // Collect the tasks from the previous notes and remove any scheduled tasks

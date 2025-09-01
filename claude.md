@@ -41,7 +41,6 @@ The `shared/` directory contains common utilities used across plugins:
 ## Current Plugins
 
 - **cleaner** - Removes "empty" content from files
-- **extractor** - Extracts selected text into new notes
 - **list-cycler** - Cycles between different list types and checkboxes
 - **list-item-deleter** - Quick deletion of list items with backspace
 - **task-forwarder** - Forwards tasks from previous daily notes

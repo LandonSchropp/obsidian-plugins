@@ -44,6 +44,7 @@ The `shared/` directory contains common utilities used across plugins:
 - **extractor** - Extracts selected text into new notes
 - **list-cycler** - Cycles between different list types and checkboxes
 - **list-item-deleter** - Quick deletion of list items with backspace
+- **project-manager** - Manages project-based task lists using clean markdown formatting
 - **task-forwarder** - Forwards tasks from previous daily notes
 
 ## Environment Variables

@@ -17,6 +17,7 @@ Right now, this repo contains the following Obsidian plugins:
 - [List Cycler](/plugins/list-cycler/readme.md): Cycles between different types of lists and
   checkboxes
 - [Task Forwarder](/plugins/task-forwarder/readme.md): Forwards tasks from previous daily notes
+- [Project Manager](/plugins/project-manager/readme.md): Manages project-based task lists using clean markdown formatting
 - [List Deleter](/plugins/list-item-deleter/readme.md): Quickly delete list items with the backspace
 - [Cleaner](/plugins/cleaner/readme.md): Removes "empty" content of files
 - [Extractor](/plugins/extractor/readme.md): Extracts selected text into a new note

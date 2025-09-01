@@ -19,6 +19,7 @@ const context = await esbuild.context({
     "plugins/extractor/main.ts",
     "plugins/list-cycler/main.ts",
     "plugins/list-item-deleter/main.ts",
+    "plugins/project-manager/main.ts",
     "plugins/task-forwarder/main.ts",
   ],
   bundle: true,

@@ -20,7 +20,6 @@ Right now, this repo contains the following Obsidian plugins:
 - [Project Manager](/plugins/project-manager/readme.md): Manages project-based task lists using clean markdown formatting
 - [List Deleter](/plugins/list-item-deleter/readme.md): Quickly delete list items with the backspace
 - [Cleaner](/plugins/cleaner/readme.md): Removes "empty" content of files
-- [Extractor](/plugins/extractor/readme.md): Extracts selected text into a new note
 
 ## Installation
 

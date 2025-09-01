@@ -1,0 +1,10 @@
+{
+  "id": "project-manager",
+  "name": "Project Manager",
+  "description": "A lightweight plugin for managing project-based task lists using clean markdown formatting",
+  "version": "1.0.0",
+  "minAppVersion": "1.6.7",
+  "author": "Landon Schropp",
+  "authorUrl": "https://www.landonschropp.com",
+  "isDesktopOnly": false
+}

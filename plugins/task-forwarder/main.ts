@@ -40,7 +40,15 @@ export default class TaskForwarderPlugin extends Plugin {
             return;
           }
 
-          return forwardTasks(this.app, file);
+          // Defer so other plugins' create-handlers (especially Templater
+          // applying file_templates) finish populating the new file before we
+          // both append tasks to it and create the cleanup file. Without the
+          // deferral, Templater's tp.file context gets pointed at our cleanup
+          // file mid-render, and our appended tasks get clobbered by
+          // Templater's eventual write of the rendered template. The plugin is
+          // slated for replacement by a shell script, so a generous fixed
+          // delay is acceptable here.
+          setTimeout(() => forwardTasks(this.app, file), 100);
         }),
       );
     });

@@ -42,7 +42,7 @@ const context = await esbuild.context({
   logLevel: "info",
   sourcemap: isProduction ? false : "inline",
   treeShaking: true,
-  outdir: isProduction ? "dist" : join(process.env.OBSIDIAN_DEVELOPMENT_VAULT, ".obsidian/plugins"),
+  outdir: isProduction ? "dist" : join(process.env.OBSIDIAN_VAULT, ".obsidian/plugins"),
   minify: isProduction,
 });
 

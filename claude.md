@@ -8,7 +8,7 @@ This is a monorepo containing personal [Obsidian plugins](https://docs.obsidian.
 
 ## Development Commands
 
-- `pnpm dev`: Start development server with hot reload (requires `$OBSIDIAN_DEVELOPMENT_VAULT` env var)
+- `pnpm dev`: Start development server with hot reload (requires `$OBSIDIAN_VAULT` env var)
 - `pnpm prod`: Build plugins and copy to production vault (requires `$OBSIDIAN_VAULT` env var)
 - `pnpm build`: Build all plugins to `dist/` directory
 - `pnpm lint`: Run ESLint and Prettier
@@ -47,5 +47,4 @@ The `shared/` directory contains common utilities used across plugins:
 
 ## Environment Variables
 
-- `$OBSIDIAN_DEVELOPMENT_VAULT` - Path to development vault for `pnpm dev`
-- `$OBSIDIAN_VAULT` - Path to production vault for `pnpm prod`
+- `$OBSIDIAN_VAULT` - Path to the vault used by `pnpm dev` and `pnpm prod`

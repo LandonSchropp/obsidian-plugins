@@ -35,6 +35,6 @@ This repo contains a few useful `pnpm` commands to assist with development.
 - `pnpm lint`: Runs Prettier and ESLint.
 - `pnpm build`: Generates a build of each plugin to the `dist` folder.
 - `pnpm dev`: This starts up the development server, automatically rebuilding each plugin when the
-  content is changed. It also automatically generates the plugin directories in the development
-  vault and symlinks the build files so the plugin can be iterated on. This command requires the
-  `$OBSIDIAN_DEVELOPMENT_VAULT` environment variable to be defined.
+  content is changed. It also automatically generates the plugin directories in the vault and
+  symlinks the build files so the plugin can be iterated on. This command requires the
+  `$OBSIDIAN_VAULT` environment variable to be defined.

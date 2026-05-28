@@ -43,7 +43,6 @@ The `shared/` directory contains common utilities used across plugins:
 - **cleaner** - Removes "empty" content from files
 - **list-cycler** - Cycles between different list types and checkboxes
 - **list-item-deleter** - Quick deletion of list items with backspace
-- **task-forwarder** - Forwards tasks from previous daily notes
 
 ## Environment Variables
 

@@ -18,7 +18,6 @@ const context = await esbuild.context({
     "plugins/cleaner/main.ts",
     "plugins/list-cycler/main.ts",
     "plugins/list-item-deleter/main.ts",
-    "plugins/task-forwarder/main.ts",
   ],
   bundle: true,
   external: [

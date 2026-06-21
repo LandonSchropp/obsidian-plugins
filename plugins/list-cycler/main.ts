@@ -1,5 +1,5 @@
 import { cycleListItemBackward, cycleListItemForward } from "./commands/commands";
-import { Plugin } from "obsidian";
+import { Editor, MarkdownView, Plugin } from "obsidian";
 import { SettingsView } from "./settings/settings-view";
 import { GroupSettings, Settings } from "./types";
 import { kebabCase } from "./utilities/string";
@@ -28,28 +28,40 @@ export default class ListCyclerPlugin extends Plugin {
       id: "remove-list",
       name: "Remove List",
       icon: "delete",
-      editorCallback: (editor) => cycleListItemForward(editor, [EMPTY_LIST_ITEM.text]),
+      callback: async () => {
+        const editor = await this.activeEditor();
+        if (editor) cycleListItemForward(editor, [EMPTY_LIST_ITEM.text]);
+      },
     });
 
     this.addCommand({
       id: "convert-to-bullet-list",
       name: "Convert to Bullet List",
       icon: "list",
-      editorCallback: (editor) => cycleListItemForward(editor, [`${BULLET_LIST_ITEM.text} `]),
+      callback: async () => {
+        const editor = await this.activeEditor();
+        if (editor) cycleListItemForward(editor, [`${BULLET_LIST_ITEM.text} `]);
+      },
     });
 
     this.addCommand({
       id: "convert-to-number-list",
       name: "Convert to Number List",
       icon: "list-ordered",
-      editorCallback: (editor) => cycleListItemForward(editor, [`${NUMBER_LIST_ITEM.text} `]),
+      callback: async () => {
+        const editor = await this.activeEditor();
+        if (editor) cycleListItemForward(editor, [`${NUMBER_LIST_ITEM.text} `]);
+      },
     });
 
     this.addCommand({
       id: "convert-to-task-list",
       name: "Convert to Task List",
       icon: "list-todo",
-      editorCallback: (editor) => cycleListItemForward(editor, [`${TASK_LIST_ITEM.text} `]),
+      callback: async () => {
+        const editor = await this.activeEditor();
+        if (editor) cycleListItemForward(editor, [`${TASK_LIST_ITEM.text} `]);
+      },
     });
 
     // Load the settings
@@ -71,10 +83,11 @@ export default class ListCyclerPlugin extends Plugin {
       id: this.generateCommandId(group.name, "forward"),
       name: `Cycle ${group.name} Forward`,
       icon: "square-chevron-right",
-      editorCallback: (editor) => {
+      callback: async () => {
         // NOTE: The list items must be loaded dynamically in the callback. Otherwise, the plugin
         // will not respond immediately to changes in the settings.
-        cycleListItemForward(editor, this.groupListItems(index));
+        const editor = await this.activeEditor();
+        if (editor) cycleListItemForward(editor, this.groupListItems(index));
       },
     });
 
@@ -82,10 +95,11 @@ export default class ListCyclerPlugin extends Plugin {
       id: this.generateCommandId(group.name, "backward"),
       name: `Cycle ${group.name} Backward`,
       icon: "square-chevron-left",
-      editorCallback: (editor) => {
+      callback: async () => {
         // NOTE: The list items must be loaded dynamically in the callback. Otherwise, the plugin
         // will not respond immediately to changes in the settings.
-        cycleListItemBackward(editor, this.groupListItems(index));
+        const editor = await this.activeEditor();
+        if (editor) cycleListItemBackward(editor, this.groupListItems(index));
       },
     });
   }
@@ -105,5 +119,27 @@ export default class ListCyclerPlugin extends Plugin {
 
   private groupListItems(index: number): string[] {
     return this.settings.groups[index].listItems.map((item) => sanitizeListItem(item.text));
+  }
+
+  /**
+   * Returns the active Markdown editor, or `null` if there isn't one. Unlike an `editorCallback`,
+   * this works on a cold start, where Obsidian may have deferred the active leaf's view. In that
+   * case, the command would otherwise be disabled until the leaf is interacted with. Hydrating the
+   * leaf first ensures the hotkey works on the very first press.
+   */
+  private async activeEditor(): Promise<Editor | null> {
+    const leaf = this.app.workspace.getMostRecentLeaf();
+
+    if (!leaf) {
+      return null;
+    }
+
+    // Hydrate the leaf if Obsidian deferred its view on startup.
+    if (leaf.isDeferred) {
+      await leaf.loadIfDeferred();
+    }
+
+    const view = leaf.view;
+    return view instanceof MarkdownView ? view.editor : null;
   }
 }

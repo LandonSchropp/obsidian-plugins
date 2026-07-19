@@ -1,6 +1,6 @@
-# CLAUDE.md
+# Agent Instructions
 
-This file provides guidance to Claude Code when working with code in this repository.
+**REQUIRED:** Read `README.md` before doing anything else. It documents the project's purpose, setup, and commands.
 
 ## Project Overview
 

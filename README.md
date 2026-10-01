@@ -1,3 +1,6 @@
+> [!WARNING]
+> **This repository is 100% vibe coded.** The author did not read any of the code. Use it at your own risk.
+
 # Obsidian Plugins
 
 This is a monorepo containing all of my personal Obsidian plugins. The monorepo structure makes it

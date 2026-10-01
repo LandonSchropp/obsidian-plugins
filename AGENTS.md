@@ -2,6 +2,8 @@
 
 **REQUIRED:** Read `README.md` before doing anything else. It documents the project's purpose, setup, and commands.
 
+**REQUIRED:** Invoke the `ls-agent:vibe` skill and follow its instructions. At the start of every session, ask the user to run `/ls-interactivity:disable-review`.
+
 ## Project Overview
 
 This is a monorepo containing personal [Obsidian plugins](https://docs.obsidian.md/Plugins/Getting+started/) built with TypeScript. The monorepo structure allows plugins to share common code through the `shared/` directory.

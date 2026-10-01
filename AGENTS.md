@@ -14,6 +14,11 @@ This is a monorepo containing personal [Obsidian plugins](https://docs.obsidian.
 - `pnpm prod`: Build plugins and copy to production vault (requires `$OBSIDIAN_VAULT` env var)
 - `pnpm build`: Build all plugins to `dist/` directory
 - `pnpm lint`: Run ESLint and Prettier
+- `pnpm test`: Run the tests and the coverage check
+
+## Test Coverage
+
+New functionality needs 100% test coverage, but don't write tests for existing code. `pnpm test` enforces this: `bin/check-coverage.rb` fails when any line or branch added or changed since the coverage baseline commit isn't covered. Its spec runs with `ruby bin/check-coverage-spec.rb`.
 
 ## Architecture
 
